@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This template creates a web application project that will serve as an attraction point for pet lovers.
+  
+Resources:
+  Myfirstportfolio:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-01c647eace872fc02
+      InstanceType: t2.micro
+      KeyName: firstkey      
+      SecurityGroups: 
+        - !Ref MyportfolioSG
+      Tags: 
+        - Key: Name 
+          Value: Web Server of StackName  
+      UserData:
+        Fn::Base64: !Sub 
+           #! /bin/bash
+            yum update -y
+            yum install httpd -y
+            cd /var/www/html
+            sudo chmod -R 777 /var/www/html/
+            wget https://raw.githubusercontent.com/YsnHstrk/ysn_cfn/blob/main/cat0.jpg?raw=true
+            wget https://raw.githubusercontent.com/ysn_cfn/blob/main/cat1.jpg?raw=true
+            wget https:/raw.githubusercontent.com/YsnHstrk/ysn_cfn/blob/main/cat2.jpg?raw=true
+            wget https://raw.githubusercontent.com/YsnHstrk/ysn_cfn/main/index.html
+            systemctl start httpd
+            systemctl enable httpd  
+
+
+
+  MyportfolioSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow port 22 & 80 # Required      
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  
+      
+
+
+      
+      
